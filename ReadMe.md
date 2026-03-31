@@ -43,4 +43,4 @@ Endpoint: https://api.exchangerate-api.com/v4/latest/{BASE}
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/currency-converter.git
+git clone https://github.com/your-username/currency-converter.git# Global-Currency-Converter
