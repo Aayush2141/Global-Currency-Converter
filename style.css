@@ -161,19 +161,23 @@ body.dark h3 {
   font-size: 28px;
   font-weight: 700;
   color: #4a6cf7;
-  min-height: 38px;
   letter-spacing: -0.5px;
   margin: 6px 28px 4px;
-  padding: 14px 18px;
-  background: #f0f3ff;
-  border-radius: 12px;
-  border-left: 4px solid #4a6cf7;
 }
 
-body.dark #result {
-  background: #12153a;
+#result.has-result {
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f5f0ff 100%);
+  border-radius: 12px;
+  border-left: 4px solid #4a6cf7;
+  box-shadow: 0 2px 12px rgba(74, 108, 247, 0.1);
+}
+
+body.dark #result.has-result {
+  background: linear-gradient(135deg, #0e1240 0%, #160e2e 100%);
   border-left-color: #6a82fb;
-  color: #8ba4ff;
+  color: #8ba8ff;
+  box-shadow: 0 2px 12px rgba(74, 108, 247, 0.15);
 }
 
 /* loading dots */

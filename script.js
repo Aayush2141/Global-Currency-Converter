@@ -31,6 +31,7 @@ function convert() {
 
   loading.innerHTML = "<span class='loader'>Converting<span>.</span><span>.</span><span>.</span></span>";
   result.innerText = "";
+  result.classList.remove("has-result");
   document.getElementById("fav-btn").style.display = "none";
 
   fetch("https://api.exchangerate-api.com/v4/latest/" + from)
@@ -40,12 +41,14 @@ function convert() {
       var final = (amount * rate).toFixed(2);
       loading.innerHTML = "";
       result.innerText = final + " " + to;
+      result.classList.add("has-result");
       lastResult = { amount: amount, from: from, to: to, result: final, rate: rate.toFixed(4) };
       document.getElementById("fav-btn").style.display = "block";
     })
     .catch(function() {
       loading.innerHTML = "";
       result.innerText = "Error";
+      result.classList.remove("has-result");
     });
 }
 
