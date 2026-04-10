@@ -1,7 +1,17 @@
 var allRates = {};
 var lastResult = null;
-var favorites = [];
 var majorCurrencies = ["USD", "INR", "EUR", "GBP"];
+
+var saved = localStorage.getItem("favorites");
+var favorites = saved ? JSON.parse(saved) : [];
+
+function debounce(fn, delay) {
+  var timer;
+  return function() {
+    clearTimeout(timer);
+    timer = setTimeout(fn, delay);
+  };
+}
 
 fetch("https://api.exchangerate-api.com/v4/latest/USD")
   .then(function(res) { return res.json(); })
@@ -10,6 +20,8 @@ fetch("https://api.exchangerate-api.com/v4/latest/USD")
     renderRates();
   });
 
+document.getElementById("search").oninput = debounce(renderRates, 300);
+
 function convert() {
   var amount = document.getElementById("amount").value;
   var from = document.getElementById("from").value;
@@ -17,7 +29,7 @@ function convert() {
   var loading = document.getElementById("loading");
   var result = document.getElementById("result");
 
-  loading.innerText = "Loading...";
+  loading.innerHTML = "<span class='loader'>Converting<span>.</span><span>.</span><span>.</span></span>";
   result.innerText = "";
   document.getElementById("fav-btn").style.display = "none";
 
@@ -26,13 +38,13 @@ function convert() {
     .then(function(data) {
       var rate = data.rates[to];
       var final = (amount * rate).toFixed(2);
-      loading.innerText = "";
+      loading.innerHTML = "";
       result.innerText = final + " " + to;
       lastResult = { amount: amount, from: from, to: to, result: final, rate: rate.toFixed(4) };
       document.getElementById("fav-btn").style.display = "block";
     })
     .catch(function() {
-      loading.innerText = "";
+      loading.innerHTML = "";
       result.innerText = "Error";
     });
 }
@@ -80,6 +92,7 @@ function saveFavorite() {
 
   favorites.push(lastResult);
   renderFavorites();
+  localStorage.setItem("favorites", JSON.stringify(favorites));
 }
 
 function renderFavorites() {
@@ -96,10 +109,21 @@ function renderFavorites() {
 function removeFavorite(index) {
   favorites = favorites.filter(function(_, i) { return i !== index; });
   renderFavorites();
+  localStorage.setItem("favorites", JSON.stringify(favorites));
 }
 
 function toggleTheme() {
   document.body.classList.toggle("dark");
   var btn = document.getElementById("theme-btn");
-  btn.innerText = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+  var isDark = document.body.classList.contains("dark");
+  btn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
 }
+
+var savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  document.getElementById("theme-btn").innerText = "☀️ Light Mode";
+}
+
+renderFavorites();
